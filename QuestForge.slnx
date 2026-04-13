@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="QuestForge.Engine/QuestForge.Engine.csproj" />
+  <Project Path="QuestForge.Tests/QuestForge.Tests.csproj" />
+</Solution>
