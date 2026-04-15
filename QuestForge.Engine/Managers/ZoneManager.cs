@@ -1,4 +1,5 @@
 namespace QuestForge.Engine.Managers;
+
 using QuestForge.Engine.World;
 
 public class ZoneManager
@@ -10,13 +11,13 @@ public class ZoneManager
         if (prevZone == null && nextZone == null)
         {
             if (_zones.Count > 0)
-                throw new InvalidOperationException("Can't add zone without neighbours if zones already exist");
+                throw new InvalidOperationException("Must provide prevZone or nextZone when zones already exist");
 
             _zones.AddFirst(zone);
             CurrentZone = zone;
             return _zones;
         }
-
+        
         if (prevZone != null)
         {
             var prevNode = _zones.Find(prevZone);
