@@ -1,5 +1,4 @@
 namespace QuestForge.Engine.Managers;
-
 using QuestForge.Engine.Models;
 using QuestForge.Engine.World;
 
@@ -19,24 +18,45 @@ public class CombatManager
         _combatQueue.Enqueue(new CombatAction("RoundOver", 0, source));
     }
 
-    public GameEvent? PlayCombatRound(Player player, Enemy enemy)
+public GameEvent? PlayCombatRound(Player player, Enemy enemy)
     {
         _log.Clear();
 
         while (_combatQueue.Count > 0)
         {
             var action = _combatQueue.Dequeue();
+
+            if (action.Name == "RoundOver")
+            {
+                _log.Add("-- Round Over --");
+                break;
+            }
+
             _log.Add(action.ToString());
+
+            if (action.Name == "Flee")
+            {
+                _log.Add($"{action.Source.Name} fled from combat!");
+                return new GameEvent(EventType.Dialogue, $"{action.Source.Name} fled.");
+            }
+
+            if (action.Name == "Defend")
+            {
+                _log.Add($"{action.Source.Name} takes a defensive stance.");
+                continue;
+            }
 
             if (action.Source is Player)
             {
-                enemy.Health -= action.Power;
-                _log.Add($"  -> {enemy.Name} takes {action.Power} damage (HP: {enemy.Health})");
+                int damgage = Math.Max(0, action.Power - enemy.Defence);
+                enemy.Health -= damgage;
+                _log.Add($"  -> {enemy.Name} takes {damgage} damage (HP: {enemy.Health})");
             }
             else
             {
-                player.Health -= action.Power;
-                _log.Add($"  -> {player.Name} takes {action.Power} damage (HP: {player.Health})");
+                int damgage = Math.Max(0, action.Power - player.Defence);
+                player.Health -= damgage;
+                _log.Add($"  -> {player.Name} takes {damgage} damage (HP: {player.Health})");
             }
         }
 
@@ -52,7 +72,6 @@ public class CombatManager
 
         return new GameEvent(EventType.Combat, "Combat continues...");
     }
-
     public void PrintLog()
     {
         Console.WriteLine("--- Combat Log ---");

@@ -44,7 +44,7 @@ public class Player : GameEntity
         return $"[Player] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence} Score:{Score} " + $"Zone:{CurrentZone} Items:{_inventory.Count}/{InventoryLimit}";
     }
 
-    public bool MovePlayer(ZoneManager zoneManager, string toZoneName)
+public bool MovePlayer(ZoneManager zoneManager, string toZoneName)
     {
         var destination = zoneManager.GetZone(toZoneName);
         if (destination == null)
@@ -73,7 +73,7 @@ public class Player : GameEntity
         }
 
         CurrentZone = toZoneName;
+        zoneManager.SetCurrentZone(destination);
         return true;
     }
 }
-

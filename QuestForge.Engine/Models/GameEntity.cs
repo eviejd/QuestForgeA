@@ -6,6 +6,7 @@ public abstract class GameEntity
     public int Health { get; set; }
     public int Attack { get; set; }
     public int Defence { get; set; }
+    public bool IsAlive => Health > 0;
 
     protected GameEntity(string name, int health, int attack, int defence)
     {
@@ -15,10 +16,9 @@ public abstract class GameEntity
         Defence = defence;
     }
 
-    public bool IsAlive => Health > 0;
-
     public override string ToString()
     {
-        return $"[{GetType().Name}] {Name} | HP: {Health} | ATK: {Attack} | DEF: {Defence}";
+        string result = $"Name: {Name}" + $" | Health: {Health}" + $" | Attack: {Attack}" + $" | Defence: {Defence}";
+        return result;
     }
 }
