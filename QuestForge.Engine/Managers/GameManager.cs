@@ -17,15 +17,18 @@ public class GameManager
             ActivePlayer = p;
         return id;
     }
-
+    
     public bool Unregister(int id)
-    {
-        if (!_entities.ContainsKey(id))
-            return false;
+        {
+            if (!_entities.TryGetValue(id, out var entity))
+                return false;
 
-        _entities.Remove(id);
-        return true;
-    }
+            if (entity is Player)
+                ActivePlayer = null;
+
+            _entities.Remove(id);
+            return true;
+        }
 
     public GameEntity? GetEntity(int id)
     {

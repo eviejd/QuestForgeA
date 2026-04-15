@@ -42,16 +42,16 @@ public class Enemy : GameEntity
     }
 
     private void AddDefaultActions()
-    {
-        CombatActions.Add(new CombatAction("Strike", Attack, this));
-        CombatActions.Add(new CombatAction("Defend", 0, this));
+        {
+            CombatActions.Add(new CombatAction("Strike", Attack, this));
+            CombatActions.Add(new CombatAction("Defend", 0, this));
 
-        if (Difficulty == Difficulty.Hard)
-            CombatActions.Add(new CombatAction("Power Slam", (int)(Attack * 1.5), this));
+            if (Difficulty >= Difficulty.Hard)
+                CombatActions.Add(new CombatAction("Power Slam", (int)(Attack * 1.5), this));
 
-        if (Difficulty == Difficulty.Boss)
-            CombatActions.Add(new CombatAction("Rage", Attack * 2, this));
-    }
+            if (Difficulty == Difficulty.Boss)
+                CombatActions.Add(new CombatAction("Rage", Attack * 2, this));
+        }
 
     private static int ScaleHealth(int base_, Difficulty d) => d switch
     {
