@@ -1,5 +1,4 @@
 namespace QuestForge.Engine.Managers;
-
 using QuestForge.Engine.World;
 
 public class ZoneManager
@@ -17,7 +16,7 @@ public class ZoneManager
             CurrentZone = zone;
             return _zones;
         }
-        
+
         if (prevZone != null)
         {
             var prevNode = _zones.Find(prevZone);

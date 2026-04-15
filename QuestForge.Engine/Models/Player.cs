@@ -1,3 +1,4 @@
+using QuestForge.Engine.Managers;
 namespace QuestForge.Engine.Models;
 
 public class Player : GameEntity
@@ -24,8 +25,6 @@ public class Player : GameEntity
     {
         if (_inventory.Remove(item))
             return true;
-
-        // if no reference match, fall back to name
         var match = _inventory.FirstOrDefault(i => i.Name == item.Name);
         if (match is null) return false;
 
@@ -44,4 +43,37 @@ public class Player : GameEntity
     {
         return $"[Player] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence} Score:{Score} " + $"Zone:{CurrentZone} Items:{_inventory.Count}/{InventoryLimit}";
     }
+
+    public bool MovePlayer(ZoneManager zoneManager, string toZoneName)
+    {
+        var destination = zoneManager.GetZone(toZoneName);
+        if (destination == null)
+        {
+            Console.WriteLine($"Zone '{toZoneName}' doesn't exist");
+            return false;
+        }
+
+        if (zoneManager.CurrentZone == null)
+        {
+            Console.WriteLine("Player has no current zone set");
+            return false;
+        }
+
+        var zones = zoneManager.GetZones();
+        var currentNode = zones.Find(zoneManager.CurrentZone);
+        if (currentNode == null)
+            return false;
+
+        bool isAdjacent = (currentNode.Next?.Value == destination) || (currentNode.Previous?.Value == destination);
+
+        if (!isAdjacent)
+        {
+            Console.WriteLine($"Can't move from {zoneManager.CurrentZone.Name} to {toZoneName} - not adjacent");
+            return false;
+        }
+
+        CurrentZone = toZoneName;
+        return true;
+    }
 }
+
