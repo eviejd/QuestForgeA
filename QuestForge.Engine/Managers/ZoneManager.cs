@@ -56,4 +56,29 @@ public class ZoneManager
     }
 
     public LinkedList<Zone> GetZones() => _zones;
+
+    public bool PushEvent(Zone zone, GameEvent gameEvent)
+    {
+        if (_zones.Find(zone) == null)
+            return false;
+
+        return zone.PushEvent(gameEvent);
+    }
+
+    public GameEvent? PopNextEvent(Zone zone)
+    {
+        if (_zones.Find(zone) == null)
+            return null;
+
+        return zone.PopEvent();
+    }
+
+    public GameEvent? PeekNextEvent(Zone zone)
+    {
+        if (_zones.Find(zone) == null)
+            return null;
+
+        return zone.PeekEvent();
+    }
 }
+

@@ -14,8 +14,8 @@ public class GameManager
         int id = _nextId++;
         _entities[id] = entity;
 
-        if (entity is Player p)
-            ActivePlayer = p;
+        if (entity is Player player)
+            ActivePlayer = player;
         return id;
     }
 
@@ -44,7 +44,10 @@ public class GameManager
 
     public GameEvent? PeekNextEvent(ZoneManager zoneManager)
     {
-        return zoneManager.CurrentZone?.PeekEvent();
+        if (zoneManager.CurrentZone == null)
+            return null;
+
+        return zoneManager.PeekNextEvent(zoneManager.CurrentZone);
     }
 
     public bool ApplyEffects(GameEvent gameEvent, ZoneManager zoneManager)
@@ -56,17 +59,14 @@ public class GameManager
         {
             case EventType.Campfire:
                 ActivePlayer.Health = 100;
-                Console.WriteLine($"{ActivePlayer.Name} rested at a campfire. HP restored to 100.");
+                Console.WriteLine($"{ActivePlayer.Name} rested. HP restored.");
                 break;
 
             case EventType.Loot:
                 var rarity = gameEvent.LootRarity ?? Rarity.Common;
                 var item = Item.MakeLoot(rarity);
                 bool added = ActivePlayer.AddItemToInventory(item);
-                if (added)
-                    Console.WriteLine($"{ActivePlayer.Name} found: {item}");
-                else
-                    Console.WriteLine("Inventory full, couldn't pick up loot.");
+                Console.WriteLine(added ? $"Found: {item}" : "Inventory full.");
                 break;
 
             case EventType.Dialogue:
@@ -74,7 +74,7 @@ public class GameManager
                 break;
 
             case EventType.Combat:
-                Console.WriteLine($"Combat triggered: {gameEvent.Description}");
+                Console.WriteLine($"Combat: {gameEvent.Description}");
                 break;
 
             default:

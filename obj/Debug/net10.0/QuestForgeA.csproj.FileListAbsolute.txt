@@ -1,0 +1,15 @@
+/Users/eviedurdin/QuestForgeA/bin/Debug/net10.0/QuestForgeA
+/Users/eviedurdin/QuestForgeA/bin/Debug/net10.0/QuestForgeA.deps.json
+/Users/eviedurdin/QuestForgeA/bin/Debug/net10.0/QuestForgeA.runtimeconfig.json
+/Users/eviedurdin/QuestForgeA/bin/Debug/net10.0/QuestForgeA.dll
+/Users/eviedurdin/QuestForgeA/bin/Debug/net10.0/QuestForgeA.pdb
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.GeneratedMSBuildEditorConfig.editorconfig
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.AssemblyInfoInputs.cache
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.AssemblyInfo.cs
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.csproj.CoreCompileInputs.cache
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.sourcelink.json
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.dll
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/refint/QuestForgeA.dll
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.pdb
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/QuestForgeA.genruntimeconfig.cache
+/Users/eviedurdin/QuestForgeA/obj/Debug/net10.0/ref/QuestForgeA.dll
