@@ -7,8 +7,9 @@ public class CombatManager
     private Queue<CombatAction> _combatQueue = new();
     private List<string> _log = new();
 
-    public bool QueueCombatAction(CombatAction action)
+    public bool QueueCombatAction(CombatAction action, GameEntity source)
     {
+        action.Source = source;
         _combatQueue.Enqueue(action);
         return true;
     }
