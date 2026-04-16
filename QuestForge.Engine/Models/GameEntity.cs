@@ -17,8 +17,7 @@ public abstract class GameEntity
     }
 
     public override string ToString()
-    {
-        string result = $"Name: {Name}" + $" | Health: {Health}" + $" | Attack: {Attack}" + $" | Defence: {Defence}";
-        return result;
-    }
+        {
+            return $"Name: {Name} | Health: {Health} | Attack: {Attack} | Defence: {Defence}";
+        }
 }

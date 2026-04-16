@@ -77,8 +77,8 @@ public class Enemy : GameEntity
         _ => base_
     };
 
-    public override string ToString()
-    {
-        return $"[Enemy/{Difficulty}] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence}";
-    }
+public override string ToString()
+        {
+            return $"[Enemy/{Difficulty}] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence} " + $"| Actions: {string.Join(", ", CombatActions.Select(a => a.Name))}";
+        }
 }
