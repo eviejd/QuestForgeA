@@ -35,18 +35,17 @@ public class Item
         Rarity = rarity;
     }
 
-    public static Item MakeLoot(Rarity rarity)
+public static Item MakeLoot(Rarity rarity)
     {
         return rarity switch
         {
-            Rarity.Common => CommonPool[Random.Shared.Next(CommonPool.Length)],
-            Rarity.Uncommon => UncommonPool[Random.Shared.Next(UncommonPool.Length)],
-            Rarity.Rare => RarePool[Random.Shared.Next(RarePool.Length)],
+            Rarity.Common    => CommonPool[Random.Shared.Next(CommonPool.Length)],
+            Rarity.Uncommon  => UncommonPool[Random.Shared.Next(UncommonPool.Length)],
+            Rarity.Rare      => RarePool[Random.Shared.Next(RarePool.Length)],
             Rarity.Legendary => LegendaryPool[Random.Shared.Next(LegendaryPool.Length)],
             _ => throw new ArgumentOutOfRangeException(nameof(rarity))
         };
     }
-
     private static readonly Item[] CommonPool =
     [
         new("Potion", "Recovers 20 HP", 1f, 10, Category.Consumable, Rarity.Common),
