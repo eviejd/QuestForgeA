@@ -1,5 +1,4 @@
 using QuestForge.Engine.Models;
-
 namespace QuestForge.Tests;
 
 public class PlayerTests
@@ -23,26 +22,26 @@ public class PlayerTests
     [Fact]
     public void AddItem_ReturnsFalseWhenFull()
     {
-        var p = MakePlayer();
-        for (int i = 0; i < 20; i++) p.AddItemToInventory(MakeItem($"Item{i}"));
-        Assert.False(p.AddItemToInventory(MakeItem("overflow")));
+        var player = MakePlayer();
+        for (int i = 0; i < 20; i++) player.AddItemToInventory(MakeItem($"Item{i}"));
+        Assert.False(player.AddItemToInventory(MakeItem("overflow")));
     }
 
     [Fact]
     public void AddItem_IncrementsInventoryCount()
     {
-        var p = MakePlayer();
-        p.AddItemToInventory(MakeItem());
-        Assert.Single(p.Inventory);
+        var player = MakePlayer();
+        player.AddItemToInventory(MakeItem());
+        Assert.Single(player.Inventory);
     }
 
     [Fact]
     public void RemoveItem_ReturnsTrueWhenFound()
     {
-        var p = MakePlayer();
+        var player = MakePlayer();
         var item = MakeItem();
-        p.AddItemToInventory(item);
-        Assert.True(p.RemoveItemFromInventory(item));
+        player.AddItemToInventory(item);
+        Assert.True(player.RemoveItemFromInventory(item));
     }
 
     [Fact]
@@ -54,36 +53,36 @@ public class PlayerTests
     [Fact]
     public void RemoveItem_MatchesByNameWhenNoReference()
     {
-        var p = MakePlayer();
-        p.AddItemToInventory(MakeItem("Potion"));
-        p.AddItemToInventory(MakeItem("Potion"));
-        p.RemoveItemFromInventory(MakeItem("Potion"));
-        Assert.Single(p.Inventory);
+        var player = MakePlayer();
+        player.AddItemToInventory(MakeItem("Potion"));
+        player.AddItemToInventory(MakeItem("Potion"));
+        player.RemoveItemFromInventory(MakeItem("Potion"));
+        Assert.Single(player.Inventory);
     }
 
     [Fact]
     public void FindByName_ReturnsAllMatches()
     {
-        var p = MakePlayer();
-        p.AddItemToInventory(MakeItem("Potion"));
-        p.AddItemToInventory(MakeItem("Super Potion"));
-        p.AddItemToInventory(MakeItem("Sword"));
-        Assert.Equal(2, p.FindItemByName("Potion").Count);
+        var player = MakePlayer();
+        player.AddItemToInventory(MakeItem("Potion"));
+        player.AddItemToInventory(MakeItem("Super Potion"));
+        player.AddItemToInventory(MakeItem("Sword"));
+        Assert.Equal(2, player.FindItemByName("Potion").Count);
     }
 
     [Fact]
     public void FindByName_ReturnsEmptyWhenNoMatch()
     {
-        var p = MakePlayer();
-        p.AddItemToInventory(MakeItem("Sword"));
-        Assert.Empty(p.FindItemByName("Potion"));
+        var player = MakePlayer();
+        player.AddItemToInventory(MakeItem("Sword"));
+        Assert.Empty(player.FindItemByName("Potion"));
     }
 
     [Fact]
     public void FindByName_CaseInsensitive()
     {
-        var p = MakePlayer();
-        p.AddItemToInventory(MakeItem("Potion"));
-        Assert.Single(p.FindItemByName("POTION"));
+        var player = MakePlayer();
+        player.AddItemToInventory(MakeItem("Potion"));
+        Assert.Single(player.FindItemByName("POTION"));
     }
 }

@@ -1,5 +1,4 @@
 using QuestForge.Engine.Models;
-
 namespace QuestForge.Tests;
 
 public class EnemyTests
@@ -7,8 +6,8 @@ public class EnemyTests
     [Fact]
     public void Enemy_HasAtLeastTwoActions()
     {
-        var e = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
-        Assert.True(e.CombatActions.Count >= 2);
+        var enemy = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
+        Assert.True(enemy.CombatActions.Count >= 2);
     }
 
     [Fact]
@@ -30,7 +29,7 @@ public class EnemyTests
     [Fact]
     public void ToString_ContainsDifficulty()
     {
-        var e = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
-        Assert.Contains("Easy", e.ToString());
+        var enemy = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
+        Assert.Contains("Easy", enemy.ToString());
     }
 }

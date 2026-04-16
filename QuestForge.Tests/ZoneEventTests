@@ -1,0 +1,48 @@
+using QuestForge.Engine.World;
+namespace QuestForge.Tests;
+
+public class ZoneEventTests
+{
+    private Zone MakeZone() => new("Town", "A small town");
+    private GameEvent MakeEvent(EventType type = EventType.Dialogue) =>
+        new(type, "test event");
+
+    [Fact]
+    public void PushEvent_ReturnsTrueForValidEvent()
+    {
+        Assert.True(MakeZone().PushEvent(MakeEvent()));
+    }
+
+    [Fact]
+    public void PopEvent_ReturnsNullWhenEmpty()
+    {
+        Assert.Null(MakeZone().PopEvent());
+    }
+
+    [Fact]
+    public void PopEvent_ReturnsLastPushed()
+    {
+        var zone = MakeZone();
+        var first = MakeEvent(EventType.Dialogue);
+        var second = MakeEvent(EventType.Combat);
+        zone.PushEvent(first);
+        zone.PushEvent(second);
+
+        Assert.Equal(second, zone.PopEvent());
+    }
+
+    [Fact]
+    public void PeekEvent_DoesNotRemoveEvent()
+    {
+        var zone = MakeZone();
+        zone.PushEvent(MakeEvent());
+        zone.PeekEvent();
+        Assert.NotNull(zone.PopEvent());
+    }
+
+    [Fact]
+    public void PeekEvent_ReturnsNullWhenEmpty()
+    {
+        Assert.Null(MakeZone().PeekEvent());
+    }
+}

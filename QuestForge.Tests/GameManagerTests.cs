@@ -1,6 +1,5 @@
 using QuestForge.Engine.Managers;
 using QuestForge.Engine.Models;
-
 namespace QuestForge.Tests;
 
 public class GameManagerTests
@@ -8,28 +7,28 @@ public class GameManagerTests
     [Fact]
     public void Register_ReturnsUniqueIds()
     {
-        var gm = new GameManager();
-        int id1 = gm.Register(new Player("Aria"));
-        int id2 = gm.Register(new Enemy("Goblin", 30, 8, 3, Difficulty.Easy));
+        var gameManager = new GameManager();
+        int id1 = gameManager.Register(new Player("Aria"));
+        int id2 = gameManager.Register(new Enemy("Goblin", 30, 8, 3, Difficulty.Easy));
         Assert.NotEqual(id1, id2);
     }
 
     [Fact]
     public void Register_SetsActivePlayer()
     {
-        var gm = new GameManager();
-        var p = new Player("Aria");
-        gm.Register(p);
-        Assert.Equal(p, gm.ActivePlayer);
+        var gameManager = new GameManager();
+        var player = new Player("Aria");
+        gameManager.Register(player);
+        Assert.Equal(player, gameManager.ActivePlayer);
     }
 
     [Fact]
     public void GetEntity_ReturnsCorrectEntity()
     {
-        var gm = new GameManager();
-        var e = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
-        int id = gm.Register(e);
-        Assert.Equal(e, gm.GetEntity(id));
+        var gameManager = new GameManager();
+        var enemy = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
+        int id = gameManager.Register(enemy);
+        Assert.Equal(enemy, gameManager.GetEntity(id));
     }
 
     [Fact]
@@ -41,9 +40,9 @@ public class GameManagerTests
     [Fact]
     public void Unregister_ReturnsTrueWhenFound()
     {
-        var gm = new GameManager();
-        int id = gm.Register(new Player("Aria"));
-        Assert.True(gm.Unregister(id));
+        var gameManager = new GameManager();
+        int id = gameManager.Register(new Player("Aria"));
+        Assert.True(gameManager.Unregister(id));
     }
 
     [Fact]
@@ -55,18 +54,18 @@ public class GameManagerTests
     [Fact]
     public void Unregister_ClearsActivePlayer()
     {
-        var gm = new GameManager();
-        int id = gm.Register(new Player("Aria"));
-        gm.Unregister(id);
-        Assert.Null(gm.ActivePlayer);
+        var gameManager = new GameManager();
+        int id = gameManager.Register(new Player("Aria"));
+        gameManager.Unregister(id);
+        Assert.Null(gameManager.ActivePlayer);
     }
 
     [Fact]
     public void GetAll_ReturnsAllEntities()
     {
-        var gm = new GameManager();
-        gm.Register(new Player("Aria"));
-        gm.Register(new Enemy("Goblin", 30, 8, 3, Difficulty.Easy));
-        Assert.Equal(2, gm.GetAll().Count);
+        var gameManager = new GameManager();
+        gameManager.Register(new Player("Aria"));
+        gameManager.Register(new Enemy("Goblin", 30, 8, 3, Difficulty.Easy));
+        Assert.Equal(2, gameManager.GetAll().Count);
     }
 }

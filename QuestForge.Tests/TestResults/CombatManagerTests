@@ -1,0 +1,109 @@
+using QuestForge.Engine.Managers;
+using QuestForge.Engine.Models;
+using QuestForge.Engine.World;
+
+namespace QuestForge.Tests;
+
+public class CombatManagerTests
+{
+    private Player MakePlayer() => new("Aria", health: 100, attack: 20, defence: 5);
+    private Enemy MakeEnemy(Difficulty d = Difficulty.Easy) =>
+        new("Goblin", 30, 8, 3, d);
+
+    [Fact]
+    public void QueueAction_CanBeQueued()
+    {
+        var cm = new CombatManager();
+        var player = MakePlayer();
+        var action = new CombatAction("Strike", 20, player);
+        Assert.True(cm.QueueCombatAction(action));
+    }
+
+    [Fact]
+    public void PlayRound_ReturnsLootWhenEnemyDies()
+    {
+        var cm = new CombatManager();
+        var player = MakePlayer();
+        var enemy = MakeEnemy();
+
+        // 20 attack vs 3 defence = 17 damage, enemy has 30 HP so need two hits
+        cm.QueueCombatAction(new CombatAction("Strike", 20, player));
+        cm.QueueCombatAction(new CombatAction("Strike", 20, player));
+        cm.QueueRoundOver(player);
+
+        var result = cm.PlayCombatRound(player, enemy);
+        Assert.Equal(EventType.Loot, result?.Type);
+    }
+
+    [Fact]
+    public void PlayRound_ReturnsGameOverWhenPlayerDies()
+    {
+        var cm = new CombatManager();
+        var player = new Player("Aria", health: 5, attack: 1, defence: 0);
+        var enemy = MakeEnemy();
+
+        cm.QueueCombatAction(new CombatAction("Strike", 100, enemy));
+        cm.QueueRoundOver(enemy);
+
+        var result = cm.PlayCombatRound(player, enemy);
+        Assert.Equal(EventType.Dialogue, result?.Type);
+    }
+
+    [Fact]
+    public void PlayRound_AccountsForDefence()
+    {
+        var cm = new CombatManager();
+        var player = new Player("Aria", health: 100, attack: 20, defence: 10);
+        var enemy = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
+
+        // enemy attack 8 - player defence 10 = 0 damage
+        cm.QueueCombatAction(new CombatAction("Strike", 8, enemy));
+        cm.QueueRoundOver(enemy);
+
+        cm.PlayCombatRound(player, enemy);
+        Assert.Equal(100, player.Health);
+    }
+
+    [Fact]
+    public void PlayRound_RoundOverBreaksLoop()
+    {
+        var cm = new CombatManager();
+        var player = MakePlayer();
+        var enemy = MakeEnemy();
+
+        cm.QueueRoundOver(player);
+        cm.QueueCombatAction(new CombatAction("Strike", 999, player));
+
+        cm.PlayCombatRound(player, enemy);
+        // enemy should still be alive - the 999 strike was after RoundOver
+        Assert.True(enemy.IsAlive);
+    }
+
+    [Fact]
+    public void Flee_EndsCombat()
+    {
+        var cm = new CombatManager();
+        var player = MakePlayer();
+        var enemy = MakeEnemy();
+
+        cm.QueueCombatAction(new CombatAction("Flee", 0, player));
+        var result = cm.PlayCombatRound(player, enemy);
+
+        Assert.Equal(EventType.Dialogue, result?.Type);
+        Assert.Contains("fled", result?.Description);
+    }
+
+    [Fact]
+    public void GetLog_ContainsEntries()
+    {
+        var cm = new CombatManager();
+        var player = MakePlayer();
+        var enemy = MakeEnemy();
+
+        cm.QueueCombatAction(new CombatAction("Strike", 10, player));
+        cm.QueueRoundOver(player);
+        cm.PlayCombatRound(player, enemy);
+
+        Assert.NotEmpty(cm.GetLog());
+    }
+}
