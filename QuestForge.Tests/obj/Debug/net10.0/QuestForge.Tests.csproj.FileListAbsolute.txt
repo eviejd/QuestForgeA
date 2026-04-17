@@ -1,13 +1,13 @@
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/CoverletSourceRootsMapping
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.csproj.AssemblyReference.cache
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.GeneratedMSBuildEditorConfig.editorconfig
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.AssemblyInfoInputs.cache
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.AssemblyInfo.cs
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.csproj.CoreCompileInputs.cache
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/obj/Debug/net10.0/QuestForge.Tests.sourcelink.json
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.runner.reporters.netcoreapp10.dll
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.runner.utility.netcoreapp10.dll
+/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/.msCoverageSourceRootsMapping_QuestForge.Tests
+/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/CoverletSourceRootsMapping_QuestForge.Tests
+/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.abstractions.dll
+/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.runner.visualstudio.testadapter.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/QuestForge.Tests.deps.json
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/QuestForge.Tests.runtimeconfig.json
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/QuestForge.Tests.dll
@@ -22,8 +22,6 @@
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/Microsoft.VisualStudio.TestPlatform.Common.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/testhost.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/Newtonsoft.Json.dll
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/NuGet.Frameworks.dll
-/Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.abstractions.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.assert.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.core.dll
 /Users/eviedurdin/QuestForgeA/QuestForge.Tests/bin/Debug/net10.0/xunit.execution.dotnet.dll

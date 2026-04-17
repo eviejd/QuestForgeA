@@ -44,36 +44,27 @@ public class Player : GameEntity
         return $"[Player] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence} Score:{Score} " + $"Zone:{CurrentZone} Items:{_inventory.Count}/{InventoryLimit}";
     }
 
-public bool MovePlayer(ZoneManager zoneManager, string toZoneName)
+public bool MovePlayer(ZoneManager zm, string toZoneName)
     {
-        var destination = zoneManager.GetZone(toZoneName);
+        var destination = zm.GetZone(toZoneName);
         if (destination == null)
-        {
-            Console.WriteLine($"Zone '{toZoneName}' doesn't exist");
             return false;
-        }
 
-        if (zoneManager.CurrentZone == null)
-        {
-            Console.WriteLine("Player has no current zone set");
+        if (zm.CurrentZone == null)
             return false;
-        }
 
-        var zones = zoneManager.GetZones();
-        var currentNode = zones.Find(zoneManager.CurrentZone);
+        var zones = zm.GetZones();
+        var currentNode = zones.Find(zm.CurrentZone);
         if (currentNode == null)
             return false;
 
         bool isAdjacent = (currentNode.Next?.Value == destination) || (currentNode.Previous?.Value == destination);
 
         if (!isAdjacent)
-        {
-            Console.WriteLine($"Can't move from {zoneManager.CurrentZone.Name} to {toZoneName} - not adjacent");
             return false;
-        }
 
         CurrentZone = toZoneName;
-        zoneManager.SetCurrentZone(destination);
+        zm.SetCurrentZone(destination);
         return true;
     }
 }

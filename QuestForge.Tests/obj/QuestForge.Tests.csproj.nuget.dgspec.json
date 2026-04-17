@@ -383,19 +383,19 @@
           "dependencies": {
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.6.0, )"
+              "version": "[17.14.1, )"
             },
             "coverlet.collector": {
               "target": "Package",
-              "version": "[3.1.2, )"
+              "version": "[6.0.4, )"
             },
             "xunit": {
               "target": "Package",
-              "version": "[2.4.2, )"
+              "version": "[2.9.3, )"
             },
             "xunit.runner.visualstudio": {
               "target": "Package",
-              "version": "[2.4.2, )"
+              "version": "[3.1.4, )"
             }
           },
           "imports": [
