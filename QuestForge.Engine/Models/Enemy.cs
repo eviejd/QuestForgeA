@@ -2,22 +2,6 @@ namespace QuestForge.Engine.Models;
 
 public enum Difficulty { Easy, Hard, Boss }
 
-public class CombatAction
-{
-    public string Name { get; set; }
-    public int Power { get; set; }
-    public GameEntity Source { get; set; }
-
-    public CombatAction(string name, int power, GameEntity source)
-    {
-        Name = name;
-        Power = power;
-        Source = source;
-    }
-
-    public override string ToString() => $"{Source.Name} uses {Name} (Power:{Power})";
-}
-
 public class Enemy : GameEntity
 {
     public Difficulty Difficulty { get; set; }
@@ -42,16 +26,16 @@ public class Enemy : GameEntity
     }
 
     private void AddDefaultActions()
-        {
-            CombatActions.Add(new CombatAction("Strike", Attack, this));
-            CombatActions.Add(new CombatAction("Defend", 0, this));
+    {
+        CombatActions.Add(new CombatAction("Strike", Attack, this));
+        CombatActions.Add(new CombatAction("Defend", 0, this));
 
-            if (Difficulty >= Difficulty.Hard)
-                CombatActions.Add(new CombatAction("Power Slam", (int)(Attack * 1.5), this));
+        if (Difficulty >= Difficulty.Hard)
+            CombatActions.Add(new CombatAction("Power Slam", (int)(Attack * 1.5), this));
 
-            if (Difficulty == Difficulty.Boss)
-                CombatActions.Add(new CombatAction("Rage", Attack * 2, this));
-        }
+        if (Difficulty == Difficulty.Boss)
+            CombatActions.Add(new CombatAction("Rage", Attack * 2, this));
+    }
 
     private static int ScaleHealth(int base_, Difficulty d) => d switch
     {
@@ -77,8 +61,6 @@ public class Enemy : GameEntity
         _ => base_
     };
 
-public override string ToString()
-        {
-            return $"[Enemy/{Difficulty}] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence} " + $"| Actions: {string.Join(", ", CombatActions.Select(a => a.Name))}";
-        }
+    public override string ToString() =>
+        $"[Enemy/{Difficulty}] {Name} | HP:{Health} ATK:{Attack} DEF:{Defence}" + $" | Actions: {string.Join(", ", CombatActions.Select(a => a.Name))}";
 }

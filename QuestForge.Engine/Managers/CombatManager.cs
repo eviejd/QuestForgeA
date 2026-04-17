@@ -82,4 +82,9 @@ public GameEvent? PlayCombatRound(Player player, Enemy enemy)
     }
 
     public List<string> GetLog() => _log;
+
+    internal bool QueueCombatAction(CombatAction action)
+    {
+        throw new NotImplementedException();
+    }
 }

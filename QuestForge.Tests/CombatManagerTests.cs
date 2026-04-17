@@ -1,6 +1,7 @@
 using QuestForge.Engine.Managers;
 using QuestForge.Engine.Models;
 using QuestForge.Engine.World;
+using Xunit;
 
 namespace QuestForge.Tests;
 

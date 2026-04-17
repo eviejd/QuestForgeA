@@ -1,5 +1,5 @@
 using QuestForge.Engine.Models;
-
+using Xunit;
 namespace QuestForge.Tests;
 
 public class EnemyTests

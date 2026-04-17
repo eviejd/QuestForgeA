@@ -1,6 +1,7 @@
 using QuestForge.Engine.Managers;
 using QuestForge.Engine.World;
 namespace QuestForge.Tests;
+using Xunit;
 
 public class ZoneManagerTests
 {

@@ -1,5 +1,6 @@
 using QuestForge.Engine.Managers;
 using QuestForge.Engine.Models;
+using Xunit;
 namespace QuestForge.Tests;
 
 public class GameManagerTests

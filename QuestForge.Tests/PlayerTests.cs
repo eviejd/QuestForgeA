@@ -1,5 +1,5 @@
 using QuestForge.Engine.Models;
-
+using Xunit;
 namespace QuestForge.Tests;
 
 public class PlayerTests
@@ -32,7 +32,7 @@ public class PlayerTests
     {
         var player = MakePlayer();
         player.AddItemToInventory(MakeItem());
-        Assert.Equal(1, player.Inventory.Count);
+        Assert.Single(player.Inventory);
     }
 
     [Fact]
@@ -57,7 +57,7 @@ public class PlayerTests
         player.AddItemToInventory(MakeItem("Potion"));
         player.AddItemToInventory(MakeItem("Potion"));
         player.RemoveItemFromInventory(MakeItem("Potion"));
-        Assert.Equal(1, player.Inventory.Count);
+        Assert.Single(player.Inventory);
     }
 
     [Fact]
