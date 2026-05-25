@@ -42,6 +42,7 @@ public class GameManager
         return _entities.Values.ToList();
     }
 
+// events are what happens INSIDE a zone while the player is there
     public GameEvent? PeekNextEvent(ZoneManager zoneManager)
     {
         if (zoneManager.CurrentZone == null)
