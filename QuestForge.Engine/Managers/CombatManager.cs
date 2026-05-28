@@ -26,7 +26,10 @@ public class CombatManager
         var player = obj1 as Player ?? obj2 as Player;
         var enemy  = obj1 as Enemy  ?? obj2 as Enemy;
 
-        _log.Add($"=== Combat: {player!.Name} vs {enemy!.Name} ===");
+        if (player == null || enemy == null)
+            throw new ArgumentException("BeginCombat requires one Player and one Enemy");
+
+        _log.Add($"=== Combat: {player.Name} vs {enemy.Name} ===");
 
         int round = 1;
         while (player.IsAlive && enemy.IsAlive)
@@ -36,15 +39,16 @@ public class CombatManager
             if (_combatQueue.Count == 0)
             {
                 _combatQueue.Enqueue(new CombatAction("Strike", player.Attack, player));
-                _combatQueue.Enqueue(new CombatAction("Strike", player.Attack, enemy));
+                var ea = enemy.CombatActions[Random.Shared.Next(enemy.CombatActions.Count)];
+                _combatQueue.Enqueue(new CombatAction(ea.Name, ea.Power, enemy));
                 QueueRoundOver(player);
             }
 
             var result = PlayCombatRound(player, enemy);
             if (result == null) continue;
-            if (result.Type == EventType.Loot)                        { _log.Add($"{player.Name} wins!"); return result; }
-            if (result.Description == "Game Over")                    { _log.Add($"{player.Name} defeated."); return result; }
-            if (result.Description?.Contains("fled") == true)         { _log.Add("Combat ended."); return result; }
+            if (result.Type == EventType.Loot)                { _log.Add($"{player.Name} wins!"); return result; }
+            if (result.Description == "Game Over")            { _log.Add($"{player.Name} defeated."); return result; }
+            if (result.Description?.Contains("fled") == true) { _log.Add("Combat ended."); return result; }
         }
 
         return new GameEvent(EventType.Dialogue, "Combat ended.");
