@@ -1,4 +1,5 @@
 namespace QuestForge.Engine.Managers;
+
 using QuestForge.Engine.Models;
 using QuestForge.Engine.World;
 
@@ -19,45 +20,63 @@ public class CombatManager
         _combatQueue.Enqueue(new CombatAction("RoundOver", 0, source));
     }
 
-public GameEvent? PlayCombatRound(Player player, Enemy enemy)
+    public GameEvent? BeginCombat(GameEntity obj1, GameEntity obj2)
     {
         _log.Clear();
+        var player = obj1 as Player ?? obj2 as Player;
+        var enemy  = obj1 as Enemy  ?? obj2 as Enemy;
 
+        _log.Add($"=== Combat: {player!.Name} vs {enemy!.Name} ===");
+
+        int round = 1;
+        while (player.IsAlive && enemy.IsAlive)
+        {
+            _log.Add($"\n-- Round {round++} --");
+
+            if (_combatQueue.Count == 0)
+            {
+                _combatQueue.Enqueue(new CombatAction("Strike", player.Attack, player));
+                _combatQueue.Enqueue(new CombatAction("Strike", player.Attack, enemy));
+                QueueRoundOver(player);
+            }
+
+            var result = PlayCombatRound(player, enemy);
+            if (result == null) continue;
+            if (result.Type == EventType.Loot)                        { _log.Add($"{player.Name} wins!"); return result; }
+            if (result.Description == "Game Over")                    { _log.Add($"{player.Name} defeated."); return result; }
+            if (result.Description?.Contains("fled") == true)         { _log.Add("Combat ended."); return result; }
+        }
+
+        return new GameEvent(EventType.Dialogue, "Combat ended.");
+    }
+
+    public GameEvent? PlayCombatRound(Player player, Enemy enemy)
+    {
         while (_combatQueue.Count > 0)
         {
             var action = _combatQueue.Dequeue();
 
-            if (action.Name == "RoundOver")
+            if (action.Name == "RoundOver") { _log.Add("-- Round Over --"); break; }
+            if (action.Name == "Flee")
             {
-                _log.Add("-- Round Over --");
-                break;
+                _log.Add($"{action.Source.Name} fled!");
+                return new GameEvent(EventType.Dialogue, $"{action.Source.Name} fled.");
             }
+            if (action.Name == "Defend") { _log.Add($"{action.Source.Name} defends."); continue; }
 
             _log.Add(action.ToString());
 
-            if (action.Name == "Flee")
-            {
-                _log.Add($"{action.Source.Name} fled from combat!");
-                return new GameEvent(EventType.Dialogue, $"{action.Source.Name} fled.");
-            }
-
-            if (action.Name == "Defend")
-            {
-                _log.Add($"{action.Source.Name} takes a defensive stance.");
-                continue;
-            }
-
             if (action.Source is Player)
             {
-                int damgage = Math.Max(0, action.Power - enemy.Defence);
-                enemy.Health -= damgage;
-                _log.Add($"  -> {enemy.Name} takes {damgage} damage (HP: {enemy.Health})");
+                int dmg = Math.Max(0, action.Power - enemy.Defence);
+                enemy.Health -= dmg;
+                _log.Add($"  -> {enemy.Name} takes {dmg} damage (HP:{enemy.Health})");
             }
             else
             {
-                int damgage = Math.Max(0, action.Power - player.Defence);
-                player.Health -= damgage;
-                _log.Add($"  -> {player.Name} takes {damgage} damage (HP: {player.Health})");
+                int dmg = Math.Max(0, action.Power - player.Defence);
+                player.Health -= dmg;
+                _log.Add($"  -> {player.Name} takes {dmg} damage (HP:{player.Health})");
             }
         }
 
@@ -68,23 +87,17 @@ public GameEvent? PlayCombatRound(Player player, Enemy enemy)
             return loot;
         }
 
-        if (!player.IsAlive)
-            return new GameEvent(EventType.Dialogue, "Game Over");
-
+        if (!player.IsAlive) return new GameEvent(EventType.Dialogue, "Game Over");
         return new GameEvent(EventType.Combat, "Combat continues...");
     }
+
     public void PrintLog()
     {
         Console.WriteLine("--- Combat Log ---");
-        foreach (var entry in _log)
-            Console.WriteLine(entry);
+        foreach (var entry in _log) Console.WriteLine(entry);
         Console.WriteLine("------------------");
     }
 
-    public List<string> GetLog() => _log;
-
-    internal bool QueueCombatAction(CombatAction action)
-    {
-        throw new NotImplementedException();
-    }
+    public string GetLog() => string.Join("\n", _log);
+    public List<string> GetLogLines() => _log;
 }
