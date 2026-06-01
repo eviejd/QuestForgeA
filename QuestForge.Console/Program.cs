@@ -57,8 +57,7 @@ void ProcessEvent()
 {
     var zone = zoneManager.CurrentZone!;
 
-    // Change back to PopNextEvent(zone) if that's your actual method signature.
-    var gameEvent = zone.PopNextEvent();
+    var gameEvent = zoneManager.PopNextEvent(zone);
 
     if (gameEvent == null)
     {

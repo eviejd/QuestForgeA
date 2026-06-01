@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuestForge.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8084ae735d0c7c8d5b0da66de132a457900adbdf")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d4777ed73c426ecfe092a37b31ccf6d38ea080e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuestForge.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuestForge.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
