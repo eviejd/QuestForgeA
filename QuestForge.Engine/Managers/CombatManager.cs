@@ -56,16 +56,23 @@ public class CombatManager
 
     public GameEvent? PlayCombatRound(Player player, Enemy enemy)
     {
+        bool playerFled = false;
+        bool enemyFled  = false;
+
         while (_combatQueue.Count > 0)
         {
             var action = _combatQueue.Dequeue();
 
             if (action.Name == "RoundOver") { _log.Add("-- Round Over --"); break; }
+
             if (action.Name == "Flee")
             {
                 _log.Add($"{action.Source.Name} fled!");
-                return new GameEvent(EventType.Dialogue, $"{action.Source.Name} fled.");
+                if (action.Source is Player) playerFled = true;
+                else enemyFled = true;
+                continue;
             }
+
             if (action.Name == "Defend") { _log.Add($"{action.Source.Name} defends."); continue; }
 
             _log.Add(action.ToString());
@@ -84,6 +91,35 @@ public class CombatManager
             }
         }
 
+        // both fled
+        if (playerFled && enemyFled)
+        {
+            _log.Add("Both parties fled — combat draw!");
+            return new GameEvent(EventType.Dialogue, "Both fled.");
+        }
+
+        // player fled
+        if (playerFled)
+        {
+            return new GameEvent(EventType.Dialogue, $"{player.Name} fled.");
+        }
+
+        // enemy fled
+        if (enemyFled)
+        {
+            _log.Add($"{enemy.Name} fled!");
+            var loot = new GameEvent(EventType.Loot, $"{enemy.Name} fled, leaving loot!");
+            loot.LootRarity = Rarity.Common;
+            return loot;
+        }
+
+        // both die same round
+        if (!enemy.IsAlive && !player.IsAlive)
+        {
+            _log.Add("Both combatants fell — it's a draw!");
+            return new GameEvent(EventType.Dialogue, "Draw");
+        }
+
         if (!enemy.IsAlive)
         {
             var loot = new GameEvent(EventType.Loot, $"Defeated {enemy.Name}!");
@@ -92,6 +128,7 @@ public class CombatManager
         }
 
         if (!player.IsAlive) return new GameEvent(EventType.Dialogue, "Game Over");
+
         return new GameEvent(EventType.Combat, "Combat continues...");
     }
 
