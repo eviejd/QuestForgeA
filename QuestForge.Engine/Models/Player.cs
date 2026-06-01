@@ -30,11 +30,6 @@ public class Player : GameEntity
         ClearedEvents.Add(gameEvent);
     }
 
-    public void ResetInterrupt()
-    {
-        _hasUsedInterrupt = false;
-    }
-
     public bool AddItemToInventory(Item item)
     {
         if (_inventory.Count >= InventoryLimit) return false;
