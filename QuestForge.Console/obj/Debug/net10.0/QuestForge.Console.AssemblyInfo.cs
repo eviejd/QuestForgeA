@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuestForge.Console")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7847f6f67681d03416a34191407e6c0a4e82c78")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+79d82d3a645c688c7d6400c3a8f430ff19257b4c")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuestForge.Console")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuestForge.Console")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
