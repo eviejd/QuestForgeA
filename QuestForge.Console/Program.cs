@@ -2,8 +2,8 @@
 using QuestForge.Engine.Models;
 using QuestForge.Engine.World;
 
-var (gm, zm, player) = SampleWorld.Build();
-var cm = new CombatManager();
+var (gameManager, zoneManager, player) = SampleWorld.Build();
+var combatManager = new CombatManager();
 
 Console.WriteLine("=== QuestForge ===");
 Console.WriteLine(player);
@@ -15,8 +15,8 @@ void RunGame()
 {
     while (true)
     {
-        var zone = zm.CurrentZone!;
-        var next = gm.PeekNextEvent(zm);
+        var zone = zoneManager.CurrentZone!;
+        var next = gameManager.PeekNextEvent(zoneManager);
 
         Console.WriteLine($"\n[ {zone.Name} ]");
         Console.WriteLine(next != null ? $"Next: {next}" : "No events remaining.");
@@ -38,29 +38,37 @@ void RunGame()
 
 void ProcessEvent()
 {
-    var zone = zm.CurrentZone!;
-    var ev = zm.PopNextEvent(zone);
+    var zone = zoneManager.CurrentZone!;
+    var event = zone.PopNextEvent(zone);
 
-    if (ev == null)
+    if (event == null)
     {
         Console.WriteLine("Nothing here. Move to another zone.");
         return;
     }
 
-    Console.WriteLine($"\n{ev}");
+    Console.WriteLine($"\n{event}");
 
-    if (ev.Type == EventType.Combat)
-        Combat(ev);
+    if (event.Type == EventType.Combat)
+        Combat(event);
     else
-        gm.ApplyEffects(ev, zm);
+        gm.ApplyEffects(event, zoneManager);
 }
 
-void Combat(GameEvent ev)
+void EndGame()
 {
-    var difficulty = ev.CombatDifficulty ?? Difficulty.Easy;
+    Console.WriteLine($"\nGame over. Final score: {player.Score}");
+    bool madeIt = gameManager.RegisterScore(player);
+    Console.WriteLine(madeIt ? "You made the top 10!" : "Better luck next time.");
+    Console.WriteLine(gameManager.PrintTopTen());
+    gm.SaveRankings(lbPath);
+}
+
+void Combat(GameEvent event)
+{
+    var difficulty = event.CombatDifficulty ?? Difficulty.Easy;
     var template = new Enemy("Goblin", 30, 8, 3, Difficulty.Easy);
     var enemy = new Enemy(difficulty, template);
-
     Console.WriteLine($"A {enemy.Name} appears! HP:{enemy.Health} ATK:{enemy.Attack} DEF:{enemy.Defence}");
 
     while (player.IsAlive && enemy.IsAlive)
@@ -70,37 +78,37 @@ void Combat(GameEvent ev)
         Console.Write("> ");
 
         var input = Console.ReadLine()?.Trim();
-
         var playerAction = input switch
         {
             "2" => new CombatAction("Defend", 0, player),
             "3" => new CombatAction("Flee", 0, player),
-            _   => new CombatAction("Strike", player.Attack, player)
+            _  => new CombatAction("Strike", player.Attack, player)
         };
 
         var enemyAction = enemy.CombatActions[Random.Shared.Next(enemy.CombatActions.Count)];
+        combatManager.QueueCombatAction(playerAction, player);
+        combatManager.QueueCombatAction(new CombatAction(ea.Name, ea.Power, enemy), enemy);
+        ombatManager.QueueRoundOver(player);
 
-        cm.QueueCombatAction(playerAction, player);
-        cm.QueueCombatAction(enemyAction, enemy);
-        cm.QueueRoundOver(player);
-
-        var result = cm.PlayCombatRound(player, enemy);
-        cm.PrintLog();
+        var result = ombatManager.PlayCombatRound(player, enemy);
+        combatManager.PrintLog();
 
         if (result == null) continue;
 
         if (result.Type == EventType.Loot)
         {
-            player.Score += difficulty switch
-            {
-                Difficulty.Easy => 10,
-                Difficulty.Hard => 25,
-                Difficulty.Boss => 100,
-                _               => 10
-            };
-            Console.WriteLine($"Enemy defeated! Score: {player.Score}");
-            gm.ApplyEffects(result, zm);
+            int pts = gameManager.ApplyCombatScore(difficulty);
+            Console.WriteLine($"Victory! +{pts} score. Total: {player.Score}");
+            gameManager.ApplyEffects(result, zoneManager);
+            player.ClearEvent(event);
             return;
+        }
+
+        if (result.Description == "Draw")
+        {
+            Console.WriteLine("Combat ended in a draw.");
+            EndGame();
+            Environment.Exit(0);
         }
 
         if (result.Description?.Contains("fled") == true)
@@ -111,7 +119,8 @@ void Combat(GameEvent ev)
 
         if (result.Description == "Game Over")
         {
-            Console.WriteLine("You died. Game over.");
+            Console.WriteLine("You were defeated.");
+            EndGame();
             Environment.Exit(0);
         }
     }
@@ -120,8 +129,8 @@ void Combat(GameEvent ev)
 void Move()
 {
     Console.WriteLine("\nAdjacent zones:");
-    var zones = zm.GetZones();
-    var node = zones.Find(zm.CurrentZone!);
+    var zones = zoneManager.GetZones();
+    var node = zones.Find(zoneManager.CurrentZone!);
     if (node?.Previous != null) Console.WriteLine($"  <- {node.Previous.Value.Name}");
     if (node?.Next != null)     Console.WriteLine($"  -> {node.Next.Value.Name}");
 
@@ -129,7 +138,7 @@ void Move()
     var input = Console.ReadLine()?.Trim();
     if (string.IsNullOrEmpty(input)) return;
 
-    if (player.MovePlayer(zm, input))
+    if (player.MovePlayer(zoneManager, input))
         Console.WriteLine($"Moved to {input}.");
     else
         Console.WriteLine("Can't move there - not adjacent.");
