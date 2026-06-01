@@ -87,23 +87,49 @@ public class Player : GameEntity
         return true;
     }
 
+// tracks temporary defence bonus from interrupt
+    public int InterruptDefenceBonus { get; private set; } = 0;
+
     public bool Interrupt(ZoneManager zm, Item item)
     {
         if (_hasUsedInterrupt) return false;
-        if (item.Category != Category.Consumable) return false;
+        if (item.Category != Category.Consumable && item.Category != Category.Armour)
+            return false;
 
-        bool hasItem = _inventory.Contains(item) ||
-                       _inventory.Any(i => i.Name == item.Name);
+        bool hasItem = _inventory.Contains(item) || _inventory.Any(i => i.Name == item.Name);
         if (!hasItem) return false;
 
         if (item.Name.Contains("Elixir", StringComparison.OrdinalIgnoreCase))
+        {
             Health = 100;
+            RemoveItemFromInventory(item);
+        }
         else if (item.Name.Contains("Potion", StringComparison.OrdinalIgnoreCase))
+        {
             Health = Math.Min(Health + 20, 100);
+            RemoveItemFromInventory(item);
+        }
+        else if (item.Category == Category.Armour)
+        {
+            // temporary defence boost, lasts until next zone
+            InterruptDefenceBonus = item.Value / 10;
+            Defence += InterruptDefenceBonus;
+        }
+        else
+        {
+            return false;
+        }
 
-        RemoveItemFromInventory(item);
         _hasUsedInterrupt = true;
         return true;
+    }
+
+    public void ResetInterrupt()
+    {
+        // remove any temporary defence boost on zone change
+        Defence -= InterruptDefenceBonus;
+        InterruptDefenceBonus = 0;
+        _hasUsedInterrupt = false;
     }
 
     public override string ToString()
