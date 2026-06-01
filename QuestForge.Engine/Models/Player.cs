@@ -1,6 +1,7 @@
 namespace QuestForge.Engine.Models;
 
 using QuestForge.Engine.Managers;
+using QuestForge.Engine.World;
 
 public class Player : GameEntity
 {
@@ -52,7 +53,7 @@ public class Player : GameEntity
 
     public List<Item> FindItemByName(string name)
     {
-        List<Item> found = new List<Item>();
+        var found = new List<Item>();
         foreach (Item item in _inventory)
         {
             if (item.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
@@ -70,10 +71,10 @@ public class Player : GameEntity
         var currentNode = zm.GetZones().Find(zm.CurrentZone);
         if (currentNode == null) return false;
 
-        bool isAdjacent = currentNode.Next?.Value == destination || currentNode.Previous?.Value == destination;
+        bool isAdjacent = currentNode.Next?.Value == destination ||
+                          currentNode.Previous?.Value == destination;
 
         if (!isAdjacent) return false;
-
         return zm.MeetsRequirements(destination, this);
     }
 
@@ -91,7 +92,8 @@ public class Player : GameEntity
         if (_hasUsedInterrupt) return false;
         if (item.Category != Category.Consumable) return false;
 
-        bool hasItem = _inventory.Contains(item) || _inventory.Any(i => i.Name == item.Name);
+        bool hasItem = _inventory.Contains(item) ||
+                       _inventory.Any(i => i.Name == item.Name);
         if (!hasItem) return false;
 
         if (item.Name.Contains("Elixir", StringComparison.OrdinalIgnoreCase))
