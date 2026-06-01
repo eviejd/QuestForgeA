@@ -12,6 +12,13 @@ public class GameManager
     public Player? ActivePlayer { get; private set; }
     public Leaderboard Leaderboard { get; } = new();
 
+    // score values per event type
+    public const int ScoreLoot     = 1;
+    public const int ScoreCampfire = 5;
+    public const int ScoreEasy     = 1;
+    public const int ScoreHard     = 5;
+    public const int ScoreBoss     = 10;
+
     public int Register(GameEntity entity)
     {
         int id = _nextId++;
@@ -50,15 +57,15 @@ public class GameManager
         {
             case EventType.Campfire:
                 ActivePlayer.Health = 100;
-                ActivePlayer.AddScore(5);
-                Console.WriteLine($"{ActivePlayer.Name} rested. HP restored.");
+                ActivePlayer.AddScore(ScoreCampfire);
+                Console.WriteLine($"{ActivePlayer.Name} rested. HP restored. +{ScoreCampfire} score.");
                 break;
 
             case EventType.Loot:
                 var item = Item.MakeLoot(gameEvent.LootRarity ?? Rarity.Common);
                 bool added = ActivePlayer.AddItemToInventory(item);
                 Console.WriteLine(added ? $"Found: {item}" : "Inventory full.");
-                ActivePlayer.AddScore(1);
+                ActivePlayer.AddScore(ScoreLoot);
                 break;
 
             case EventType.Dialogue:
@@ -75,6 +82,22 @@ public class GameManager
 
         ActivePlayer.ClearEvent(gameEvent);
         return true;
+    }
+
+    public int ApplyCombatScore(Difficulty difficulty)
+    {
+        if (ActivePlayer == null) return 0;
+
+        int pts = difficulty switch
+        {
+            Difficulty.Easy => ScoreEasy,
+            Difficulty.Hard => ScoreHard,
+            Difficulty.Boss => ScoreBoss,
+            _               => ScoreEasy
+        };
+
+        ActivePlayer.AddScore(pts);
+        return pts;
     }
 
     public bool RegisterScore(Player player)
